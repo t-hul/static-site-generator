@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 from leafnode import LeafNode
 
@@ -46,29 +45,3 @@ def text_node_to_html_node(text_node: TextNode):
             return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         case _:
             raise Exception(f"TextNode has unknown text_type: {text_node.text_type}")
-
-
-def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type):
-    new_nodes = []
-
-    for node in old_nodes:
-        if node.text_type != TextType.TEXT:
-            new_nodes.append(node)
-            continue
-
-        split_text = node.text.split(delimiter)
-        split_nodes = []
-        if len(split_text) % 2 == 0:
-            raise Exception(
-                f'Text node "{node.text}" does not contain matching pair of "{delimiter}" delimiter'
-            )
-        for i, part in enumerate(split_text):
-            if part == "":
-                continue
-            if i % 2 == 0:
-                split_nodes.append(TextNode(part, TextType.TEXT))
-            else:
-                split_nodes.append(TextNode(part, text_type))
-        new_nodes.extend(split_nodes)
-
-    return new_nodes

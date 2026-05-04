@@ -30,6 +30,58 @@ def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type):
     return new_nodes
 
 
+def split_nodes_image(old_nodes: List[TextNode]):
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        split_nodes = []
+        remaining_text = node.text
+        images = extract_markdown_images(remaining_text)
+        for image in images:
+            image_alt, image_url = *image
+            split_text = remaining_text.split(f"![{image_alt}]({image_url})", 1)
+            remaining_text = split_text[1]
+            if split_text[0] != "":
+                split_nodes.append(TextNode(split_text[0], TextType.TEXT))
+            split_nodes.append(TextNode(image_alt, TextType.IMAGE, url=image_url))
+        if remaining_text != "":
+            split_nodes.append(TextNode(remaining_text, TextType.TEXT))
+
+        new_nodes.extend(split_nodes)
+
+    return new_nodes
+
+
+def split_nodes_link(old_nodes: List[TextNode]):
+    new_nodes = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        split_nodes = []
+        remaining_text = node.text
+        links = extract_markdown_images(remaining_text)
+        for link in links:
+            link_text, link_url = *link
+            split_text = remaining_text.split(f"[{link_text}]({link_url})", 1)
+            remaining_text = split_text[1]
+            if split_text[0] != "":
+                split_nodes.append(TextNode(split_text[0], TextType.TEXT))
+            split_nodes.append(TextNode(link_text, TextType.LINK, url=link_url))
+        if remaining_text != "":
+            split_nodes.append(TextNode(remaining_text, TextType.TEXT))
+
+        new_nodes.extend(split_nodes)
+
+    return new_nodes
+
+
 def extract_markdown_images(text):
     return re.findall(r"\!\[(.*?)\]\((.*?)\)", text)
 

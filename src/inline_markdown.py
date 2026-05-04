@@ -4,7 +4,18 @@ from typing import List
 from textnode import TextNode, TextType
 
 
-def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type):
+def text_to_textnodes(text: str) -> List[TextNode]:
+    nodes = [TextNode(text, TextType.TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+
+    return nodes
+
+
+def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type) -> List[TextNode]:
     new_nodes = []
 
     for node in old_nodes:
@@ -30,7 +41,7 @@ def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type):
     return new_nodes
 
 
-def split_nodes_image(old_nodes: List[TextNode]):
+def split_nodes_image(old_nodes: List[TextNode]) -> List[TextNode]:
     new_nodes = []
 
     for node in old_nodes:
@@ -56,7 +67,7 @@ def split_nodes_image(old_nodes: List[TextNode]):
     return new_nodes
 
 
-def split_nodes_link(old_nodes: List[TextNode]):
+def split_nodes_link(old_nodes: List[TextNode]) -> List[TextNode]:
     new_nodes = []
 
     for node in old_nodes:

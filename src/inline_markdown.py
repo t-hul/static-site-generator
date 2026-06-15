@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-from textnode import TextNode, TextType
+from .textnode import TextNode, TextType
 
 
 def text_to_textnodes(text: str) -> List[TextNode]:
@@ -15,7 +15,9 @@ def text_to_textnodes(text: str) -> List[TextNode]:
     return nodes
 
 
-def split_nodes_delimiter(old_nodes: List[TextNode], delimiter, text_type) -> List[TextNode]:
+def split_nodes_delimiter(
+    old_nodes: List[TextNode], delimiter, text_type
+) -> List[TextNode]:
     new_nodes = []
 
     for node in old_nodes:

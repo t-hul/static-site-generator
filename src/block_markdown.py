@@ -76,7 +76,7 @@ def code_to_html_node(block: str) -> HTMLNode:
 def quote_to_html_node(block: str) -> HTMLNode:
     lines = []
     for line in block.splitlines():
-        lines.append(line.split(">", maxsplit=1)[1])
+        lines.append(line.split(">", maxsplit=1)[1].strip())
     text = "\n".join(lines)
     children = text_to_children(text)
     return ParentNode("blockquote", children)

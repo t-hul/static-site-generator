@@ -17,6 +17,13 @@ class BlockType(Enum):
     ORDERED_LIST = "ordered_list"
 
 
+def extract_title(markdown: str) -> str:
+    for line in markdown.splitlines():
+        if line.startswith("# "):
+            return line[2:]
+    raise Exception("No 'h1' header found in markdown file")
+
+
 def markdown_to_html_node(markdown: str) -> HTMLNode:
     blocks = markdown_to_blocks(markdown)
     blocknodes = []

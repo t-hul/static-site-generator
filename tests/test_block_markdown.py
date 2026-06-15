@@ -3,9 +3,35 @@ import unittest
 from src.block_markdown import (
     BlockType,
     block_to_block_type,
+    extract_title,
     markdown_to_blocks,
     markdown_to_html_node,
 )
+
+
+class TestMarkdownExtractTitle(unittest.TestCase):
+    def test_extract_title(self):
+        md = """
+# Header one
+# Header two
+
+No header
+"""
+        title = extract_title(md)
+        self.assertEqual(title, "Header one")
+
+    def test_extract_no_title(self):
+        md = """
+No header
+
+Still no header # here
+"""
+        self.assertRaisesRegex(
+            Exception,
+            "No 'h1' header found in markdown file",
+            extract_title,
+            md,
+        )
 
 
 class TestMarkdownToBlocks(unittest.TestCase):
